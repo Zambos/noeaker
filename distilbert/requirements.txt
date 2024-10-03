@@ -1,0 +1,8 @@
+fastapi
+uvicorn
+transformers
+torch
+sklearn
+scipy
+pymongo
+pydantic

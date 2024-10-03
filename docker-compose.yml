@@ -1,0 +1,47 @@
+version: '3'
+services:
+  mongo:
+    image: mongo:latest
+    container_name: mongodb
+    restart: always
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
+    volumes:
+      - ./data/db:/data/db
+
+  backend:
+    build: ./backend
+    container_name: fastapi-backend
+    restart: always
+    ports:
+      - "8000:8000"
+    environment:
+      MONGO_URI: mongodb://root:example@mongo:27017
+    depends_on:
+      - mongo
+    volumes:
+      -./backend:/app/backend
+
+  distilbert:
+    build:
+      context: ./distilbert
+      dockerfile: Dockerfile
+    container_name: distilbert
+    restart: always
+    ports:
+      - "8001:8001"
+    volumes:
+      -./distilbert:/app/distilbert
+  
+
+  # frontend:
+  #   build: ./frontend
+  #   container_name: react-frontend
+  #   restart: always
+  #   ports:
+  #     - "3000:3000"
+  #   depends_on:
+  #     - backend
